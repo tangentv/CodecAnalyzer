@@ -8,7 +8,11 @@ Build dteps:
 2. cmake ..
 3. cmake --build . -j.   OR     cmake --build build
 
+## Application Screenshots
 
+### Codec Analysis
+
+![Codec Analysis](screenshots/codec-analyzer-output.png)
 
 * Structure of the code is :
                 CodecAnalyzer/
