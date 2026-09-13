@@ -8,7 +8,7 @@ Build dteps:
 2. cmake ..
 3. cmake --build . -j.   OR     cmake --build build
 
-## Application Screenshots
+## Screenshots
 
 ### Codec Analysis
 
@@ -28,6 +28,8 @@ Build dteps:
                 │   └── StreamInfo.cpp
                 │
                 └── build/
+
+                
 
 * The basec FFmpeg flow is :
 
