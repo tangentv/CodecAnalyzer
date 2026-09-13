@@ -40,6 +40,6 @@ public:
 private:
 
     std::string filename_;
-    StreamInfo* streamInfo;
+    StreamInfo streamInfo;
     AVFormatContext* formatContext;
 };

@@ -17,8 +17,8 @@ public:
 
     explicit StreamInfo();
 
-    void getMediaInfo(AVFormatContext* formatContext);
-    void getCodecInfo(AVFormatContext* formatContext);
+    void printMediaInfo(AVFormatContext* formatContext, std::string filename_);
+    void printStreamInfo(AVFormatContext* formatContext);
 
     void close(AVFormatContext* formatContext);
 

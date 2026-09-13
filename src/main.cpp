@@ -25,8 +25,11 @@ int main(int argc, char* argv[]){
 
     const char* filename = argv[1];
 
-    MediaAnalyzer* mediaAnalyzer = new MediaAnalyzer(filename);
-    bool result = mediaAnalyzer->analyze();
+    MediaAnalyzer mediaAnalyzer(filename);
+    if(!mediaAnalyzer.analyze()){
+        std::cerr << "Failed to analyze media file\n";
+        return 1;
+    }
 
     std::cout << "\n========================================\n";
     return 0;

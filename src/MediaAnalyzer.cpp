@@ -3,16 +3,25 @@
 #include <iostream>
 #include <iomanip>
 
+/*
+Update required when we convert to player.
+- open
+read packets
+decode
+read packets
+decode
+.
+.
+.
+close
+*/
+
 MediaAnalyzer::MediaAnalyzer(const std::string& filename)
-    : filename_(filename)
+    : filename_(filename), formatContext(nullptr)
 {    
-    formatContext = nullptr;
-    streamInfo = new StreamInfo();
 }
 
 bool MediaAnalyzer::analyze(){
-
-    AVFormatContext* formatContext = nullptr;
 
     int ret = avformat_open_input(&formatContext,filename_.c_str(),nullptr,nullptr);
 
@@ -31,8 +40,10 @@ bool MediaAnalyzer::analyze(){
         return false;
     }
 
-    streamInfo->getCodecInfo(formatContext);
-    streamInfo->getMediaInfo(formatContext);
+    streamInfo.printStreamInfo(formatContext);
+    streamInfo.printMediaInfo(formatContext, filename_);
+
+    closeAnalyzer();//remove this when we convert the code to a player implementation
 
     return true;
 
