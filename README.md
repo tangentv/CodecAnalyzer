@@ -14,22 +14,9 @@ Build dteps:
 
 ![Codec Analysis](screenshots/codec-analyzer-output.png)
 
-* Structure of the code is :
-                CodecAnalyzer/
-                │
-                ├── CMakeLists.txt
-                ├── include/
-                │   ├── MediaAnalyzer.h
-                │   └── StreamInfo.h
-                │
-                ├── src/
-                │   ├── main.cpp
-                │   ├── MediaAnalyzer.cpp
-                │   └── StreamInfo.cpp
-                │
-                └── build/
 
-                
+![Display of the first frame on the screen](screenshots/Display%20of%20the%20first%20frame%20on%20the%20screen.png)
+              
 
 * The basec FFmpeg flow is :
 
@@ -50,8 +37,3 @@ Build dteps:
                         ├── Audio → AVCodecParameters
                         │
                         └── Subtitle / Data
-
-
-
-
-

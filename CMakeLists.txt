@@ -13,6 +13,9 @@ add_executable(codec
     src/main.cpp
     src/StreamInfo.cpp
     src/MediaAnalyzer.cpp
+    src/Demuxer.cpp
+    src/VideoDecoder.cpp
+    src/VideoRenderer.cpp
 )
 
 target_include_directories(codec PRIVATE

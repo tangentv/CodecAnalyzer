@@ -51,5 +51,5 @@ bool MediaAnalyzer::analyze(){
 
 void MediaAnalyzer::closeAnalyzer()
 {
-    avformat_close_input(&formatContext);
+    //avformat_close_input(&formatContext);
 }

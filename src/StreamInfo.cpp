@@ -76,7 +76,7 @@ for (unsigned int i = 0;i < formatContext->nb_streams;++i)
     }
 }
 
-void StreamInfo::close(AVFormatContext* formatContext)
-{
-    avformat_close_input(&formatContext);
-}
+// void StreamInfo::close(AVFormatContext* formatContext)
+// {
+//     avformat_close_input(&formatContext);
+// }

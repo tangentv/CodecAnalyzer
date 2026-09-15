@@ -20,7 +20,7 @@ public:
     void printMediaInfo(AVFormatContext* formatContext, std::string filename_);
     void printStreamInfo(AVFormatContext* formatContext);
 
-    void close(AVFormatContext* formatContext);
+    //void close(AVFormatContext* formatContext);
 
 private:
 
