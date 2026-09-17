@@ -81,57 +81,40 @@ if (argc < 2)
 
     while (demuxer.readPacket(packet))
     {
-        //demux
-        //decode
-        //render
-        int streamIndex = packet->stream_index;
-        const char* type = "Unknown";
-        if (streamIndex == demuxer.getVideoStreamIndex())
-        {
-            bool frameReceived = false;
-            type = "VIDEO";
-            // if (!videoDecoder.decode(packet))
-            // {
-            //     std::cerr << "Failed to decode video packet\n";
-            //     break;
-            // }
+        if(!renderer.processEvents()){
+            break;
+        }
 
+        const char* type = "Unknown";
+        if (packet->stream_index == demuxer.getVideoStreamIndex())
+        {
+            //bool frameReceived = false;
+            type = "VIDEO";
             AVFrame* frame = videoDecoder.decode(packet);
             if (frame)
             {
-                std::cout << "Frame received: "<< frame->width << "x"<< frame->height << '\n';
-                renderer.render(frame);
+              renderer.render(frame, videoStream->time_base);
             }
         }
-        else if (streamIndex == demuxer.getAudioStreamIndex())
-        {
+        else if(packet->stream_index == demuxer.getAudioStreamIndex()){
             type = "AUDIO";
+            // We process/identify the audio packet.
+            // AudioDecoder will be added later.
         }
-
         /*
         PTS = Presentation Timestamp ----> When should this frame be displayed?
         DTS = Decode Timestamp ----> When should this packet/frame be decoded?
         */
-        std::cout
-            << "Packet #"<< packetNumber<< "  "<< std::setw(5)<< type
-            << "  Stream="<< streamIndex
-            << "  PTS="<< packet->pts
-            << "  DTS="<< packet->dts
-            << "  Duration="<< packet->duration
-            << "  Size="<< packet->size;
-
         if (packet->flags & AV_PKT_FLAG_KEY)
         {
             std::cout<< "  KEY_FRAME";
         }
-
-        std::cout << '\n';
         ++packetNumber;
         av_packet_unref(packet);
-    }
-
-    while(renderer.processEvents()){
-        //added to make your windo open until you press close button
+        if (!renderer.processEvents())
+        {
+            break;
+        }
     }
     av_packet_free(&packet);
 

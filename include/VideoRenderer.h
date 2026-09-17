@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cstdint>
+
 extern "C"
 {
 #include <libavutil/frame.h>
+#include <libavutil/rational.h>
 }
 
 struct SDL_Window;
@@ -16,7 +19,7 @@ public:
     ~VideoRenderer();
 
     bool initialize(int width, int height);
-    void render(AVFrame* frame);
+    void render(AVFrame* frame, AVRational timeBase);
     bool processEvents();
     void close();
 
@@ -27,4 +30,8 @@ private:
 
     int width_;
     int height_;
+    double firstPresentationTime_;
+
+    uint64_t startTime_;
+    bool clockStarted_;
 };

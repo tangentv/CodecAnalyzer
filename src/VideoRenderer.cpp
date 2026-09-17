@@ -8,7 +8,10 @@ VideoRenderer::VideoRenderer(): window_(nullptr),
       renderer_(nullptr),
       texture_(nullptr),
       width_(0),
-      height_(0)
+      height_(0),
+      firstPresentationTime_(0.0),
+      startTime_(0),
+      clockStarted_(false)
 {
 }
 
@@ -76,27 +79,50 @@ bool VideoRenderer::initialize(int width, int height)
 
     if (!texture_)
     {
-        std::cerr << "Failed to create SDL texture: "
-                << SDL_GetError()
-                << '\n';
+        //std::cerr << "Failed to create SDL texture: "
+                //<< SDL_GetError()
+                //<< '\n';
 
         close();
         return false;
     }
 
-    std::cout << "SDL initialized successfully\n";
-    std::cout << "SDL window created: "
-              << width_ << "x" << height_
-              << '\n';
+    // std::cout << "SDL initialized successfully\n";
+    // std::cout << "SDL window created: "
+              //<< width_ << "x" << height_
+              //<< '\n';
 
     return true;
 }
 
-void VideoRenderer::render(AVFrame* frame)
+void VideoRenderer::render(AVFrame* frame, AVRational timeBase)
 {
     if (!frame || !texture_)
     {
         return;
+    }
+
+    double presentationTime = frame->pts * av_q2d(timeBase);
+
+    if (!clockStarted_)
+    {
+        startTime_ = SDL_GetTicks64();
+        firstPresentationTime_ = presentationTime;
+        clockStarted_ = true;
+    }
+
+    // How much real time has elapsed since playback started?
+    double elapsedTime = (SDL_GetTicks64() - startTime_) / 1000.0;
+    double targetTime = presentationTime - firstPresentationTime_;
+    double difference = targetTime - elapsedTime;
+
+    // std::cout << "PTS time : " << presentationTime << " sec, "
+    // <<"Target time   : "<<targetTime<<" sec\n"
+    // <<"Elapsed : "<< elapsedTime << " sec, " << "Difference : " << difference << " sec\n";
+
+    if (difference > 0)
+    {
+        SDL_Delay(static_cast<Uint32>(difference * 1000.0));
     }
 
     SDL_UpdateYUVTexture(
@@ -160,7 +186,6 @@ bool VideoRenderer::processEvents()
             return false;
         }
     }
-
-    SDL_Delay(10);
+    
     return true;
 }
