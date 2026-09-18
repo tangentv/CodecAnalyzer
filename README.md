@@ -37,3 +37,24 @@ Build dteps:
                         ├── Audio → AVCodecParameters
                         │
                         └── Subtitle / Data
+
+
+What we have implemented so far : 
+
+- AVFormatContext
+- Demuxing with av_read_frame()
+- Identifying video/audio streams
+- H.264 decoding
+- AAC decoding
+- AVPacket → AVFrame
+- Video PTS/time-base handling
+- SDL2 video rendering
+- SDL2 audio output
+- fltp → FLT conversion using libswresample
+- Audio queuing with SDL_QueueAudio()
+
+![Codec Analysis](screenshots/Steps%20for%20Audio%20video%20play.png)
+
+
+Next step:
+A/V synchronization

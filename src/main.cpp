@@ -5,6 +5,8 @@
 #include "MediaAnalyzer.h"
 #include "VideoDecoder.h"
 #include "VideoRenderer.h"
+#include "AudioDecoder.h"
+#include "AudioRenderer.h"
 
 /*
 libavformat → opens MP4/MKV
@@ -67,6 +69,49 @@ if (argc < 2)
         return 1; 
     }
 
+    /*
+    --------------------------------------------------
+    Audio stream
+    --------------------------------------------------
+    */
+
+    int audioStreamIndex = demuxer.getAudioStreamIndex();
+
+    AudioDecoder audioDecoder;
+
+    AVStream* audioStream = nullptr;
+
+    if (audioStreamIndex != -1)
+    {
+        audioStream =
+            demuxer.getFormatContext()->streams[audioStreamIndex];
+
+        if (!audioDecoder.open(audioStream->codecpar))
+        {
+            std::cerr << "Failed to open audio decoder\n";
+            return 1;
+        }
+    }
+    else
+    {
+        std::cout << "No audio stream found\n";
+    }
+    
+    //////////////////////////////////////////////////////////////
+    AudioRenderer audioRenderer;
+
+    if (audioStream)
+    {
+        if (!audioRenderer.initialize(
+                audioStream->codecpar->sample_rate,
+                audioStream->codecpar->ch_layout.nb_channels))
+        {
+            std::cerr << "Failed to initialize audio renderer\n";
+            return 1;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////
     VideoRenderer renderer;
 
     if (!renderer.initialize(
@@ -100,6 +145,20 @@ if (argc < 2)
             type = "AUDIO";
             // We process/identify the audio packet.
             // AudioDecoder will be added later.
+
+            /*
+            Send compressed AAC packet to AudioDecoder.
+            The decoder will return a decoded AVFrame
+            containing PCM audio samples.
+            */
+
+            AVFrame* frame = audioDecoder.decode(packet);
+
+            if (frame)
+            {
+                std::cout << "Audio frame received\n";
+                audioRenderer.play(frame);
+            }
         }
         /*
         PTS = Presentation Timestamp ----> When should this frame be displayed?

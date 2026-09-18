@@ -16,6 +16,8 @@ add_executable(codec
     src/Demuxer.cpp
     src/VideoDecoder.cpp
     src/VideoRenderer.cpp
+    src/AudioDecoder.cpp
+    src/AudioRenderer.cpp
 )
 
 target_include_directories(codec PRIVATE
